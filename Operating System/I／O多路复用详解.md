@@ -1,5 +1,5 @@
 ##来源 
-[I/O多路复用详解](http://www.cnblogs.com/gmth/p/3214168.html)
+[I/O多路复用详解](http://www.cnblogs.com/gmth/p/3214168.html)  
 [说说IO（二）- IO模型](http://pengjiaheng.iteye.com/blog/847615)
 
 ##一、I/O模型 
@@ -50,7 +50,7 @@
 
 
 ##三、下面是以上五种模型的比较
-可以看出，越往后，阻塞越少，理论上效率也是最优。 
+可以看出，越往后，阻塞越少，理论上效率也是最优。  
 5种模型的比较比较清晰了，剩下的就是把select, epoll, iocp, kqueue按号入座那就OK了。 
 
 select和iocp分别对应第3种与第5种模型，那么epoll与kqueue呢？其实也于select属于同一种模型，只是更高级一些，可以看作有了第4种模型的某些特性，如callback机制。 
