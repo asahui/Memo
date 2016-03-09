@@ -28,12 +28,13 @@ class DateExample
 {
 	public static void main (String[] args) throws java.lang.Exception
 	{
-        Date date = getLocalDateObject("2016-01-03 10:10:00 +0000");
+        Date date = getLocalDateObjectFromStringWithoutTimeZone("2016-01-03 10:10:00 +0800"); //even timezone is provided, assume as GMT
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
         // You can set another time zone 
         //formatter.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 
         System.out.println(formatter.format(date)); // Be your local format
+        System.out.println(getLocalDateString(date)); // same
 
         // Calendar use default timezone
         Calendar c = Calendar.getInstance();
@@ -48,13 +49,90 @@ class DateExample
         // Change timezone
         c.setTimeZone(TimeZone.getTimeZone("GMT"));
         System.out.println(c.get(Calendar.HOUR_OF_DAY)); // Should be 10
+        System.out.println(getTimeZoneDateString(date, TimeZone.getTimeZone("GMT"))); // same
+
+        // Calendar usage
+        Calendar c1 = Calendar.getInstance();
+        c1.set(2016, 1, 3, 10, 10);  // 2016-02-03 10:10:00 +1100   month starts from 0
+        System.out.println(formatter.format(c1.getTime())); // Be your local format
+        System.out.println(getLocalDateString(c1.getTime())); // same
 	}
 
-    public static Date getLocalDateObject(String data) {
-        Date date = null;
+    /**
+     * Format local date to String in info(RFC) format
+     */
+    public static String getLocalDateString(Date date) {
+        TimeZone tz = TimeZone.getDefault();
+        return getTimeZoneDateString(date, tz);
+    }
+
+    /**
+     * @link http://www.mkyong.com/java/java-convert-date-and-time-between-timezone/
+     */
+    public static String getTimeZoneDateString(Date date, final TimeZone tz) {
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+        formatter.setTimeZone(tz);
+        return formatter.format(date);
+    }
+
+    /**
+     * @param date A date string in info(RFC) format yyyy-MM-dd HH:mm:ss Z
+     * Z is the timezone information that must be included
+     *
+     * @return A Date Object
+     */
+    public static Date getLocalDateObject(String date) {
+        TimeZone tz = TimeZone.getDefault();
+        return getTimeZoneDateObject(date, tz);
+
+    }
+
+    /**
+     * get a date from a string(with timezone information) and convert to another Timezone @param tz
+     *
+     * @param date A date string in info(RFC) format yyyy-MM-dd HH:mm:ss Z
+     * Z is the timezone information that must be included
+     *
+     * @param tz converted timezone
+     *
+     * @return A Date Object
+     */
+    public static Date getTimeZoneDateObject(String date, TimeZone tz) {
+        Date d = null;
+
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+        formatter.setTimeZone(tz);
+
+        try {
+            d = formatter.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return d;
+    }
+
+
+    /**
+     * get Local Date Object from a string(without timezone information)
+     * assume the timezone of the date string is GMT.
+     *
+     * @param date A date string in info(RFC) format yyyy-MM-dd HH:mm:ss
+     *
+     * @return A Date Object represent local date
+     */
+    public static Date getLocalDateObjectFromStringWithoutTimeZone(String date) {
+        Date d = null;
         // formater.getDateInstance can be more efficient
+
+        // method1: parse with timezone and using default timezone
+        // DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+        // //formatter.setTimeZone(TimeZone.getDefault());
+
+        // method 2: parse without timezone
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+
         try {
             // Just parse it and get the date object, which is not timezone aware.
             // 1. If you want to handle timezone information, use Calendar or DateFormat.
@@ -74,12 +152,11 @@ class DateExample
             //   DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             //   formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
             //
-            date = formatter.parse(data);
+            d = formatter.parse(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return date;
+        return d;
     }
 }
-
 ```
