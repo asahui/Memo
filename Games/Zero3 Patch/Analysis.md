@@ -16,7 +16,7 @@
 ## 2. 在a9vg下载的non-redump版与redump版区别
 
 a9vg下载的non-redump版 -> redump版 方法
-截去 C6720000-C676FFFF (文件尾) 的 dummy zero block
+`截去 C6720000-C676FFFF (文件尾) 的 dummy zero block`
 
 Redump版文件大小为 C6720000 (3,329,359,872)
 
@@ -26,12 +26,14 @@ Redump版文件大小为 C6720000 (3,329,359,872)
 
 打汉化补丁
 下面这几块(模糊定界是从不同中分出来的，并不是确定的)要分析定位
+```
 模糊定界            | 文件定界
 7000-8881C         | ?                    <- 重构ISO索引
 24AB4388-24C64FD7  | 249F0000-24C64FD7    <- ELF 文件更改
 24C65000-24CA8390  | 24C65000-24CA8390    <- IOPRP300.IMG 更改
 24CE2000-24CF6E26  | 24CE2000-24D2586D    <- FHD文件更改
 24E6D000-24EA064C  | 24D26000- file end   <- IMG_BD.BIN 更改
+```
 
 尾部添加
 C671C000-C79E57FF
@@ -72,6 +74,7 @@ C671C000-C79E57FF
 12 不同 被发现。 
 
 上面的变动是修正ISO文件索引的
+```python
 fp.seek(0x829d2)
 fp.write(struct.pack("I" , _LBA_LENGTH * 2048))
 fp.write(struct.pack(">I" , _LBA_LENGTH * 2048))
@@ -79,11 +82,16 @@ fp.seek(0x88038)
 fp.write(struct.pack("I" , _LBA_LENGTH * 2048))
 fp.write(struct.pack("I" , 0))
 fp.write(struct.pack("I" , _LBA_LENGTH))
+```
 
 可以知道代码是修正了两部分，0x829d2与0x88038，其中_LBA_LENGTH * 2048 是 IMG_BD.BIN的大小 _LBA_LENGTH 是 img_file_size / 2048
+
 IMG_BD.BIN大小从 0xA19F6000 变为 0xA2CBB800
+
 也就是说，4：3补丁忘了修正ISO索引，而16:9修正了ISO索引！！！！
+
 真正宽屏代码就只有在
+```
 0x24C1106C开始
 改动
 0x3f8000 -> 0x3f4000
@@ -92,6 +100,7 @@ IMG_BD.BIN大小从 0xA19F6000 变为 0xA2CBB800
 //如果是真机，修改ELF的0022106C
 patch=1,EE,0032006C,extended,3F400000
 patch=1,EE,00320070,extended,3F600000
+```
 
 
 
