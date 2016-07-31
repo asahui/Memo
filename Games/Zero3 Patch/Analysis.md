@@ -16,6 +16,7 @@
 ## 2. 在a9vg下载的non-redump版与redump版区别
 
 a9vg下载的non-redump版 -> redump版 方法
+
 `截去 C6720000-C676FFFF (文件尾) 的 dummy zero block`
 
 Redump版文件大小为 C6720000 (3,329,359,872)
@@ -53,6 +54,7 @@ C671C000-C79E57FF
 
 打4：3补丁与16：9补丁后区别
 
+```
 1. I:\PS2ISO\Zero - Shisei no Koe [NTSC-J] [SLPS-25544] - 4_3.iso: 3,349,043,200 字节
 
 2. I:\PS2ISO\Zero - Shisei no Koe [NTSC-J] [SLPS-25544] - 16_9.iso: 3,349,043,200 字节
@@ -72,6 +74,7 @@ C671C000-C79E57FF
    24C1106E:80	40  <--- 这里就是关键的宽屏位置 ， ~~上面的几个变动待分析~~
 
 12 不同 被发现。 
+```
 
 上面的变动是修正ISO文件索引的
 ```python
