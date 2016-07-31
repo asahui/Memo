@@ -9,7 +9,7 @@
 - 结论：A6730000-A673FFFF 与 A6770000-A677FFFF 这两个区间：
   - non-redump: 00
   - redump: filled with data
-- 我写了个程序 Jap2Redump，用于这两个 ISO 版本的互相转换。
+- 我写了个程序 [Jap2Redump](https://github.com/asahui/Memo/tree/master/Games/Zero3%20Patch/Jap2Redump)，用于这两个 ISO 版本的互相转换。
 
 
 
